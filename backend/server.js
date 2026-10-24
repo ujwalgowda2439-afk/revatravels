@@ -176,49 +176,42 @@ app.post('/api/contact', contactLimiter, async (req, res) => {
     String(message).trim() || '(no message provided)';
 
   try {
-    await transporter.sendMail({
-      
-await transporter.sendMail({
-  from: `"REVA Travels Website" <${process.env.SMTP_USER}>`,
-  to: process.env.CONTACT_TO || process.env.SMTP_USER,
-  replyTo: emailAddr,
-  subject: `New enquiry from ${firstName} ${lastName}`,
+  await transporter.sendMail({
+    from: '"REVA Travels Website" <' + process.env.SMTP_USER + '>',
+    to: process.env.CONTACT_TO || process.env.SMTP_USER,
+    replyTo: emailAddr,
+    subject: 'New enquiry from ' + firstName + ' ' + lastName,
 
-  text: [
-    `Name: ${firstName} ${lastName}`,
-    `Email: ${emailAddr}`,
-    `Destination interest: ${destinationSafe}`,
-    '',
-    'Message:',
-    messageSafe,
-  ].join('\n'),
+    text: [
+      'Name: ' + firstName + ' ' + lastName,
+      'Email: ' + emailAddr,
+      'Destination interest: ' + destinationSafe,
+      '',
+      'Message:',
+      messageSafe,
+    ].join('\n'),
 
-  html: `
-    <h2>New enquiry from the REVA Travels website</h2>
-    <p><strong>Name:</strong> ${escapeHtml(firstName)} ${escapeHtml(lastName)}</p>
-    <p><strong>Email:</strong> ${escapeHtml(emailAddr)}</p>
-    <p><strong>Destination interest:</strong> ${escapeHtml(destinationSafe)}</p>
-    <p><strong>Message:</strong></p>
-    <p>${escapeHtml(messageSafe).replace(/\n/g, '<br>')}</p>
-  `,
-});
+    html:
+      '<h2>New enquiry from the REVA Travels website</h2>' +
+      '<p><strong>Name:</strong> ' + escapeHtml(firstName) + ' ' + escapeHtml(lastName) + '</p>' +
+      '<p><strong>Email:</strong> ' + escapeHtml(emailAddr) + '</p>' +
+      '<p><strong>Destination interest:</strong> ' + escapeHtml(destinationSafe) + '</p>' +
+      '<p><strong>Message:</strong></p>' +
+      '<p>' + escapeHtml(messageSafe).replace(/\n/g, '<br>') + '</p>',
+  });
 
-    });
+  return res.status(200).json({
+    success: true,
+    message: 'Your enquiry has been sent successfully.',
+  });
+} catch (err) {
+  console.error('Failed to send contact email:', err);
 
-    return res.status(200).json({
-      success: true,
-      message: 'Your enquiry has been sent successfully.',
-    });
-  } catch (err) {
-    console.error('Failed to send contact email:', err);
-
-    return res.status(500).json({
-      success: false,
-      message: 'Could not send your enquiry. Please try again shortly.',
-    });
-  }
-});
-
+  return res.status(500).json({
+    success: false,
+    message: 'Could not send your enquiry. Please try again shortly.',
+  });
+}
 // --------------------------------------------------
 // UNKNOWN ROUTES
 // --------------------------------------------------
