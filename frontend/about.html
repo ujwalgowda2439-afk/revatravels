@@ -1,0 +1,641 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>About Us — REVA Travels</title>
+<meta name="description" content="About REVA Travels — journeys defined by trust, service driven by excellence. Corporate, institutional, airport and outstation transportation." />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,500&family=Manrope:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&family=Niconne&family=Carattere&family=IM+Fell+Double+Pica+SC&family=Great+Vibes&display=swap" rel="stylesheet">
+<style>
+/* ==========================================================================
+   1. DESIGN TOKENS — edit these to re-theme the whole site
+   ========================================================================== */
+:root{
+  /* ---- Colors ---- */
+  --ink:        #0A1B22;   /* deep night-teal background */
+  --ink-2:      #0F2A33;   /* slightly lighter panel */
+  --sand:       #F3ECDC;   /* warm paper/cream for text on dark */
+  --sand-dim:   #c9acac;   /* muted cream for secondary text */
+  --gold:       #E3A857;   /* sunset amber accent */
+  --gold-soft:  #B9873F;   /* darker gold for hover / borders */
+  --teal-line:  #345A61;   /* hairline / divider on dark */
+  --paper:      #FBF7EE;   /* light section background */
+  --paper-ink:  #16262B;   /* dark text on light sections */
+  --navyblue:   #111E82;   /* bright blue for links / highlights */
+  --light-red:  #ed3c3c;   /* vibrant red for accents */
+  --blue:       #0E9FED;   /* vibrant blue for accents */
+  --white:      #FFFFFF;   /* pure white for text on dark */
+
+  /* ---- Type ---- */
+  --font-display: 'Fraunces', serif;
+  --font-body:    'Manrope', sans-serif;
+  --font-mono:    'JetBrains Mono', monospace;
+  --font-caption: 'Niconne', cursive;              /* logo tagline */
+  --font-nav:     'Carattere', cursive;             /* nav links: Home, Services, etc. */
+  --font-brand:   'IM Fell Double Pica SC', serif;  /* company name: REVA Travels */
+  --font-brand-script: 'Niconne', cursive;  /* accent letters/word in company name */
+  --font-brand-letter: 'Great Vibes', cursive;  /* accent letters/word in company name */
+
+  /* ---- Layout ---- */
+  --maxw: 1180px;
+  --pad: clamp(20px, 5vw, 64px);
+
+  /* ---- Hero video (all overridable from HERO_CONFIG in <script>) ---- */
+  --hero-height: 100vh;          /* overall hero section height */
+  --hero-video-width: 100%;      /* video element width */
+  --hero-video-height: 100%;     /* video element height */
+  --hero-video-fit: cover;       /* object-fit: cover | contain | fill */
+  --hero-overlay-rgb: 10,27,34;  /* overlay tint color, as r,g,b */
+  --hero-overlay-top: 0.25;      /* overlay opacity at top of hero */
+  --hero-overlay-bottom: 0.82;   /* overlay opacity at bottom of hero */
+
+
+}
+
+/* ==========================================================================
+   2. RESET & BASE
+   ========================================================================== */
+*, *::before, *::after{ box-sizing:border-box; }
+html{ scroll-behavior:smooth; overflow-x:clip; }
+body{
+  margin:0;
+  background:var(--ink);
+  color:var(--sand);
+  font-family:var(--font-body);
+  font-size:16px;
+  line-height:1.6;
+  /* `clip` behaves like hidden but does NOT create a scroll container,
+     which would silently break position:sticky on the stacked sections. */
+  overflow-x:clip;
+}
+img{ max-width:100%; display:block; }
+a{ color:inherit; text-decoration:none; }
+h1,h2,h3,h4{ font-family:var(--font-display); font-weight:600; margin:0; }
+p{ margin:0; }
+ul{ margin:0; padding:0; list-style:none; }
+button{ font-family:inherit; cursor:pointer; }
+
+::selection{ background:var(--gold); color:var(--ink); }
+
+/* Respect reduced motion preference */
+@media (prefers-reduced-motion: reduce){
+  *{ animation-duration:0.01ms !important; animation-iteration-count:1 !important; transition-duration:0.01ms !important; scroll-behavior:auto !important; }
+}
+
+.wrap{ max-width:var(--maxw); margin:0 auto; padding-left:var(--pad); padding-right:var(--pad); }
+.eyebrow{
+  font-family:var(--font-mono);
+  font-size:12px;
+  letter-spacing:0.18em;
+  text-transform:uppercase;
+  color:var(--gold);
+  display:inline-flex;
+  align-items:center;
+  gap:10px;
+}
+.eyebrow::before{ content:''; width:22px; height:1px; background:var(--gold); display:inline-block; }
+
+/* ==========================================================================
+   4. NAVIGATION — logo mark fixed top-left, links top-right
+   ========================================================================== */
+header.site-nav{
+  position:fixed; top:0; left:0; right:0; z-index:500;
+  display:flex; align-items:center; justify-content:space-between;
+  padding:22px var(--pad);
+  transition:background .4s ease, padding .4s ease, border-color .4s ease;
+  border-bottom:1px solid transparent;
+}
+header.site-nav::before{
+  content:''; position:absolute; inset:0; z-index:-1; pointer-events:none;
+  background:rgb(10, 12, 63); backdrop-filter:blur(10px);
+  opacity:0; transition:opacity .4s ease;
+}
+header.site-nav.scrolled{
+  padding-top:14px; padding-bottom:14px;
+  border-bottom:1px solid var(--teal-line);
+}
+header.site-nav.scrolled::before{ opacity:1; }
+.logo{
+  display:flex; align-items:center; gap:10px;
+  font-family:var(--font-brand); font-size:28px; font-weight:900; letter-spacing:.02em;
+  color:var(--sand);
+}
+.logo .mark{
+  width:34px; height:34px; border-radius:50%;
+  border:1px solid var(--gold); display:flex; align-items:center; justify-content:center;
+  position:relative; flex-shrink:0;
+}
+.logo-img{
+  width:100px; height:100px; border-radius:500%;
+  object-fit:cover; flex-shrink:0;
+}
+.logo .mark svg{ width:18px; height:18px; }
+.brand-script{ font-family:var(--font-brand-script); }
+.brand-initial{ font-family:var(--font-brand-letter); color:#fb0606ce; font-size:1.6em; line-height:0; vertical-align:middle; }
+.logo small{
+  display:block; font-family:var(--font-caption); font-size:20px; letter-spacing:.06em;
+  color:var(--sand-dim); font-weight:800; margin-top:2px; text-transform:none;
+}
+
+nav.links{ display:flex; align-items:center; gap:38px; }
+nav.links a{
+  font-family:var(--font-nav); font-size:28px; letter-spacing:.02em; text-transform:none;
+  color:var(--gold); position:relative; padding-bottom:4px;
+}
+nav.links a::after{
+  content:''; position:absolute; left:0; bottom:0; width:0; height:1px; background:var(--gold);
+  transition:width .3s ease;
+}
+nav.links a:hover, nav.links a.active{ color:var(--sand); }
+nav.links a:hover::after, nav.links a.active::after{ width:100%; }
+.nav-cta{
+  border:1px solid var(--gold); color:var(--gold) !important; padding:9px 18px; border-radius:30px;
+}
+.nav-cta::after{ display:none; }
+.nav-cta:hover{ background:var(--gold); color:var(--ink) !important; }
+
+.nav-toggle{ display:none; background:none; border:none; color:var(--sand); font-size:22px; }
+
+/* ---- Services drawer (dropdown holding Careers) ---- */
+nav.links .has-drawer{ position:relative; display:flex; align-items:center; gap:2px; }
+.drawer-btn{
+  background:none; border:0; color:var(--gold); font-size:13px; line-height:1; padding:8px 4px 2px;
+  transition:transform .3s ease, color .3s ease;
+}
+.drawer-btn:hover, .has-drawer.open .drawer-btn{ color:var(--sand); }
+.has-drawer.open .drawer-btn{ transform:rotate(180deg); }
+.nav-drawer{
+  position:absolute; top:100%; left:-16px; min-width:300px; padding-top:18px;
+  opacity:0; visibility:hidden; transform:translateY(8px);
+  transition:opacity .25s ease, transform .25s ease, visibility .25s;
+}
+.nav-drawer-inner{
+  background:var(--ink-2); border:1px solid var(--teal-line); border-radius:18px; padding:8px;
+  box-shadow:0 22px 44px rgba(0,0,0,.45);
+}
+nav.links .nav-drawer a{
+  display:block; padding:12px 16px; border-radius:12px; font-size:26px; line-height:1.1; color:var(--gold);
+}
+nav.links .nav-drawer a::after{ display:none; }
+nav.links .nav-drawer a:hover, nav.links .nav-drawer a[aria-current="page"]{ background:rgba(227,168,87,.12); color:var(--sand); }
+nav.links .nav-drawer a small{
+  display:block; margin-top:5px; font-family:var(--font-body); font-size:12px; letter-spacing:0; color:#9FB0B2;
+}
+.has-drawer.open .nav-drawer{ opacity:1; visibility:visible; transform:none; }
+@media (hover:hover) and (min-width:861px){
+  .has-drawer:hover .nav-drawer{ opacity:1; visibility:visible; transform:none; }
+}
+@media (max-width:860px){
+  nav.links .has-drawer{ flex-wrap:wrap; width:100%; }
+  .nav-drawer{
+    position:static; min-width:0; width:100%; padding-top:0; max-height:0; overflow:hidden;
+    opacity:1; visibility:visible; transform:none; transition:max-height .35s ease;
+  }
+  .has-drawer.open .nav-drawer{ max-height:240px; }
+  .nav-drawer-inner{ background:transparent; border:0; box-shadow:none; padding:8px 0 0 14px; border-left:1px solid var(--teal-line); margin-left:4px; }
+  nav.links .nav-drawer a{ font-size:24px; padding:8px 12px; }
+  .drawer-btn{ font-size:16px; padding:10px 8px 4px; }
+}
+
+@media (max-width:860px){
+  nav.links{
+    position:fixed; top:0; right:0; height:100vh; width:min(78vw,320px);
+    background:var(--ink-2); flex-direction:column; justify-content:center; align-items:flex-start;
+    gap:28px; padding:40px var(--pad);
+    transform:translateX(100%); transition:transform .4s ease;
+    border-left:1px solid var(--teal-line);
+  }
+  nav.links.open{ transform:translateX(0); }
+  .nav-toggle{ display:block; }
+}
+
+.btn{
+  display:inline-flex; align-items:center; gap:10px;
+  padding:15px 28px; border-radius:40px; font-size:13px; letter-spacing:.1em; text-transform:uppercase;
+  font-family:var(--font-mono);
+  transition:transform .35s cubic-bezier(.2,.8,.2,1), box-shadow .35s ease, background .3s ease, color .3s ease;
+}
+.btn-solid{ background:var(--gold); color:var(--ink); }
+.btn-solid:hover{ transform:translateY(-3px); box-shadow:0 14px 30px -10px rgba(227,168,87,.55); }
+.btn-ghost{ border:1px solid var(--teal-line); color:var(--sand); }
+.btn-ghost:hover{ border-color:var(--gold); color:var(--gold); transform:translateY(-3px); }
+/* ==========================================================================
+   12. FOOTER
+   ========================================================================== */
+footer{ border-top:1px solid var(--teal-line); padding:56px 0 30px; }
+.footer-grid{
+  max-width:var(--maxw); margin:0 auto; padding:0 var(--pad);
+  display:grid; grid-template-columns:1.4fr 1fr 1fr 1fr; gap:40px;
+}
+.footer-grid h4{ font-family:var(--font-mono); font-size:12px; letter-spacing:.12em; text-transform:uppercase; color:var(--sand); margin-bottom:18px; }
+.footer-grid ul li{ margin-bottom:10px; }
+.footer-grid ul li a{ color:var(--sand-dim); font-size:14px; transition:color .3s ease; }
+.footer-grid ul li a:hover{ color:var(--gold); }
+.social-icons{ display:flex; flex-wrap:wrap; gap:14px; }
+.social-icons a{
+  width:40px; height:40px; display:flex; align-items:center; justify-content:center;
+  border-radius:10px; border:1px solid transparent; color:var(--sand);
+  transition:color .3s ease, border-color .3s ease, transform .3s ease;
+}
+.social-icons a svg{ width:28px; height:28px; fill:none; stroke:currentColor; stroke-width:1.6; stroke-linecap:round; stroke-linejoin:round; }
+.social-icons a:hover, .social-icons a:focus-visible{ color:var(--gold); border-color:var(--gold); transform:translateY(-2px); outline:none; }
+.footer-bottom{
+  max-width:var(--maxw); margin:50px auto 0; padding:20px var(--pad) 0; border-top:1px solid var(--teal-line);
+  display:flex; justify-content:space-between; flex-wrap:wrap; gap:12px;
+  font-family:var(--font-mono); font-size:11px; color:#5C6B6D; letter-spacing:.05em;
+}
+
+
+/* ==========================================================================
+   FLOATING CONTACT BUTTONS — call / WhatsApp / email, fixed bottom-left
+   ========================================================================== */
+.floating-contacts{
+  position:fixed; right:22px; bottom:26px; z-index:400;
+  display:flex; flex-direction:column; align-items:flex-start; gap:14px;
+}
+.fab{
+  position:relative;
+  width:52px; height:52px; border-radius:50%;
+  display:flex; align-items:center; justify-content:center;
+  color:var(--ink); text-decoration:none;
+  box-shadow:0 10px 26px -8px rgba(0,0,0,.55);
+  opacity:0; transform:translateY(24px) scale(.6);
+  animation:fabIn .6s cubic-bezier(.2,.8,.2,1) forwards;
+  transition:transform .25s ease, box-shadow .25s ease;
+}
+.fab:hover{ transform:translateY(-3px) scale(1.06); box-shadow:0 16px 34px -8px rgba(0,0,0,.6); }
+.fab svg{ width:21px; height:21px; }
+.fab-call{ background:var(--gold); animation-delay:.3s; }
+.fab-email{ background:var(--sand); animation-delay:.45s; }
+.fab-whatsapp{ background:#25D366; color:#fff; animation-delay:.15s; }
+@keyframes fabIn{ to{ opacity:1; transform:translateY(0) scale(1); } }
+
+.fab-whatsapp::before{
+  content:''; position:absolute; inset:0; border-radius:50%; background:#25D366; z-index:-1;
+  animation:pulseRing 2.4s ease-out infinite;
+}
+@keyframes pulseRing{
+  0%{ transform:scale(1); opacity:.55; }
+  100%{ transform:scale(1.9); opacity:0; }
+}
+
+.fab-label{
+  position:absolute; left:62px; top:50%; transform:translateY(-50%) translateX(-6px);
+  background:var(--ink); color:var(--sand); font-size:12.5px; font-weight:600;
+  padding:7px 14px; border-radius:8px; white-space:nowrap;
+  opacity:0; pointer-events:none; transition:opacity .2s ease, transform .2s ease;
+  box-shadow:0 8px 18px -6px rgba(0,0,0,.5);
+}
+.fab:hover .fab-label{ opacity:1; transform:translateY(-50%) translateX(0); }
+
+@media (max-width:600px){
+  .floating-contacts{ right:16px; bottom:16px; gap:12px; }
+  .fab{ width:46px; height:46px; }
+  .fab-label{ display:none; }
+}
+
+/* fade-up utility for generic scroll reveals */
+.reveal{ opacity:0; transform:translateY(40px); transition:opacity .8s ease, transform .8s cubic-bezier(.2,.7,.2,1); }
+.reveal.in-view{ opacity:1; transform:translateY(0); }
+
+@media (max-width:1180px){
+  nav.links{ gap:24px; }
+  nav.links a{ font-size:24px; }
+  .logo{ font-size:24px; }
+  .logo small{ font-size:17px; }
+  .logo-img{ width:78px; height:78px; }
+}
+
+/* ---------- <= 1024px : tablets ---------- */
+@media (max-width:1024px){
+  section{ padding:90px 0; }
+  .hero-grid{ grid-template-columns:1fr; }
+  .section-head{ margin-bottom:44px; }
+  .footer-grid{ grid-template-columns:1fr 1fr; gap:32px; }
+  .postcard-inner{ height:300px; }
+}
+
+@media (max-width:860px){
+  header.site-nav{ padding-top:14px; padding-bottom:14px; }
+  .nav-toggle{ position:relative; z-index:2; font-size:28px; padding:6px 10px; line-height:1; }
+  nav.links{ z-index:1; overflow-y:auto; gap:22px; }
+  nav.links a{ font-size:30px; }
+  .nav-cta{ padding:8px 18px; }
+  .logo-img{ width:60px; height:60px; }
+  .logo{ font-size:20px; gap:8px; min-width:0; }
+  .logo{ margin-right:10px; }
+  .logo > span{ min-width:0; }
+  .logo small{ font-size:14px; line-height:1.15; white-space:normal; }
+  .hero{ padding-top:120px; }
+  .hero p.lead{ font-size:16px; }
+  .contact-grid{ gap:40px; }
+}
+
+/* ================= ABOUT PAGE ================= */
+body{ padding-top:0; }
+.ab-hero{ position:relative; min-height:88vh; display:flex; align-items:center; padding:150px 0 90px; overflow:hidden; background:linear-gradient(180deg,#0A1B22,#0F2A33); }
+.ab-hero-img{ position:absolute; inset:0; width:100%; height:100%; object-fit:cover; }
+.ab-hero::before{ content:''; position:absolute; inset:0; z-index:1; background:linear-gradient(90deg,rgba(10,27,34,.92) 0%,rgba(10,27,34,.7) 50%,rgba(10,27,34,.35) 100%); }
+.ab-hero .wrap{ position:relative; z-index:2; width:100%; }
+.ab-hero h1{ font-size:clamp(38px,6vw,72px); line-height:1.05; margin:14px 0 18px; color:var(--sand); }
+.ab-hero h1 em{ color:var(--gold); font-style:italic; }
+.ab-hero .lead{ max-width:620px; color:var(--sand); font-size:18px; }
+.ab-hero p+p{ margin-top:14px; color:var(--sand-dim); max-width:620px; }
+.ab-motto{ margin-top:28px; display:inline-block; padding:12px 20px; border-left:2px solid var(--gold); font-family:var(--font-display); font-style:italic; color:var(--gold); font-size:18px; }
+.ab-sec{ padding:110px 0; position:relative; }
+.ab-sec.light{ background:var(--paper); color:var(--paper-ink); }
+.ab-sec.light .eyebrow{ color:var(--navyblue); }
+.ab-sec.light .eyebrow::before{ background:var(--navyblue); }
+.ab-sec.alt{ background:var(--ink-2); }
+.ab-sec h2{ font-size:clamp(26px,4vw,44px); line-height:1.1; margin:12px 0 22px; }
+.ab-sec h2 em{ color:var(--gold); font-style:italic; }
+.ab-sec.light h2 em{ color:var(--gold-soft); }
+.ab-sec p{ color:var(--sand-dim); font-size:16.5px; }
+.ab-sec.light p{ color:#3b4a4e; }
+.ab-sec p+p{ margin-top:16px; }
+.ab-split{ display:grid; grid-template-columns:1.05fr 1fr; gap:64px; align-items:center; }
+.ab-split.flip .ab-media{ order:-1; }
+.ab-media{ position:relative; aspect-ratio:4/3; border-radius:22px; overflow:hidden; border:1px solid var(--teal-line);
+  background:linear-gradient(135deg,#123138,#0A1B22); box-shadow:0 30px 60px -30px rgba(0,0,0,.6); }
+.ab-media img{ position:absolute; inset:0; width:100%; height:100%; object-fit:cover; }
+.ab-media::after{ content:attr(data-label); position:absolute; inset:0; display:flex; align-items:center; justify-content:center; text-align:center; padding:24px;
+  font-family:var(--font-mono); font-size:11px; letter-spacing:.12em; text-transform:uppercase; color:var(--gold); z-index:0; }
+.ab-media img{ z-index:1; }
+.ab-center{ text-align:center; max-width:760px; margin:0 auto 56px; }
+.ab-center .eyebrow{ justify-content:center; }
+.ab-grid3{ display:grid; grid-template-columns:repeat(3,1fr); gap:24px; }
+.svc-card{ border-radius:20px; overflow:hidden; background:var(--paper); border:1px solid rgba(22,38,43,.12); transition:transform .35s ease, box-shadow .35s ease; }
+.svc-card:hover{ transform:translateY(-6px); box-shadow:0 24px 40px -22px rgba(10,27,34,.45); }
+.svc-card .ab-media{ border-radius:0; border:0; aspect-ratio:16/10; box-shadow:none; }
+.svc-body{ padding:24px; }
+.svc-body h3{ font-size:20px; color:var(--paper-ink); margin-bottom:10px; }
+.svc-body p{ font-size:15px; }
+.mv-grid{ display:grid; grid-template-columns:1fr 1fr; gap:0; border:1px solid var(--gold-soft); border-radius:24px; overflow:hidden; }
+.mv{ padding:56px 48px; }
+.mv+.mv{ border-left:1px solid var(--gold-soft); }
+.mv .ab-media{ aspect-ratio:16/9; margin-bottom:28px; }
+.mv h2{ margin-top:6px; }
+.val-grid{ display:grid; grid-template-columns:repeat(5,1fr); gap:20px; }
+.val{ padding:30px 22px; border:1px solid var(--teal-line); border-radius:18px; background:rgba(15,42,51,.6); transition:border-color .3s, transform .3s; }
+.val:hover{ border-color:var(--gold); transform:translateY(-4px); }
+.val svg{ width:38px; height:38px; fill:none; stroke:var(--gold); stroke-width:1.5; stroke-linecap:round; stroke-linejoin:round; margin-bottom:16px; }
+.val h3{ font-size:19px; margin-bottom:10px; color:var(--sand); }
+.val p{ font-size:14.5px; }
+.serve-list{ margin:24px 0; display:grid; gap:12px; }
+.serve-list li{ display:flex; gap:12px; align-items:flex-start; color:var(--paper-ink); }
+.serve-list li::before{ content:''; flex:0 0 8px; height:8px; margin-top:9px; border-radius:50%; background:var(--gold); }
+.ab-commit{ position:relative; overflow:hidden; text-align:center; padding:130px 0; background:linear-gradient(180deg,#0F2A33,#0A1B22); }
+.ab-commit-img{ position:absolute; inset:0; width:100%; height:100%; object-fit:cover; }
+.ab-commit::before{ content:''; position:absolute; inset:0; background:rgba(10,27,34,.78); z-index:1; }
+.ab-commit .wrap{ position:relative; z-index:2; max-width:820px; }
+.ab-commit .eyebrow{ justify-content:center; }
+.ab-commit .closing{ margin-top:24px; font-family:var(--font-display); font-style:italic; color:var(--gold); font-size:22px; }
+.ab-cta{ position:relative; overflow:hidden; text-align:center; padding:120px 0; background:var(--paper); color:var(--paper-ink); }
+.ab-cta .eyebrow{ color:var(--navyblue); justify-content:center; }
+.ab-cta p{ max-width:640px; margin:0 auto 14px; color:#3b4a4e; }
+.ab-cta h2{ font-size:clamp(28px,4.4vw,50px); margin:12px 0 22px; }
+.ab-cta .tag{ font-family:var(--font-display); font-style:italic; color:var(--gold-soft); font-size:20px; margin:26px 0 28px; }
+.ab-cta .row{ display:flex; gap:16px; justify-content:center; flex-wrap:wrap; }
+.ab-cta .btn-ghost{ color:var(--paper-ink); border-color:rgba(22,38,43,.35); }
+.ab-cta .btn-ghost:hover{ color:var(--gold-soft); border-color:var(--gold-soft); }
+@media (max-width:1100px){ .val-grid{ grid-template-columns:repeat(3,1fr); } }
+@media (max-width:960px){
+  .ab-split,.mv-grid{ grid-template-columns:1fr; gap:40px; }
+  .ab-split.flip .ab-media{ order:0; }
+  .ab-grid3{ grid-template-columns:1fr 1fr; }
+  .mv+.mv{ border-left:0; border-top:1px solid var(--gold-soft); }
+  .ab-sec{ padding:80px 0; }
+}
+@media (max-width:640px){
+  .ab-grid3,.val-grid{ grid-template-columns:1fr; }
+  .mv{ padding:36px 24px; }
+  .ab-hero{ min-height:0; padding:130px 0 70px; }
+  .ab-hero .lead{ font-size:16px; }
+  .ab-cta .row .btn{ flex:1 1 100%; justify-content:center; }
+}
+
+</style>
+</head>
+<body>
+<header class="site-nav" id="siteNav">
+  <a href="index.html" class="logo">
+    <img src="assets/images/Horse logo.jpg" alt="REVA Travels logo" class="logo-img">
+    <span><span class="brand-initial">R</span>eva T<span class="brand-script">ravels</span><small>Your Safety,Service and Satisfaction is Our Motto</small></span>
+  </a>
+  <nav class="links" id="navLinks">
+    <a href="index.html">Home</a>
+    <div class="has-drawer" id="servicesDrawer">
+      <a href="index.html#services">Services</a>
+      <button class="drawer-btn" type="button" aria-label="Open services menu" aria-expanded="false" aria-controls="servicesMenu">&#9662;</button>
+      <div class="nav-drawer" id="servicesMenu">
+        <div class="nav-drawer-inner">
+          <a href="index.html#services">Our Services<small>Corporate, outstation, airport &amp; more</small></a>
+          <a href="index.html#careers">Careers<small>Attach your vehicle &middot; Driver jobs</small></a>
+        </div>
+      </div>
+    </div>
+    <a href="index.html#experiences">Experiences</a>
+    <a href="about.html" class="active" aria-current="page">About</a>
+    <a href="index.html#contact" class="nav-cta">Contact</a>
+  </nav>
+  <button class="nav-toggle" id="navToggle" aria-label="Toggle menu">&#9776;</button>
+</header>
+
+<main>
+<section class="ab-hero" id="top">
+  <img class="ab-hero-img" src="assets/images/corporate.jpg" alt="REVA Travels fleet parked in front of a modern corporate building" onerror="this.remove()">
+  <div class="wrap">
+    <span class="eyebrow">About Us</span>
+    <h1>About REVA Travels<br><em>Journeys Defined by Trust.</em><br>Service Driven by Excellence.</h1>
+    <p class="lead">At REVA Travels, we believe every journey deserves thoughtful planning, dependable service, and a commitment to excellence. We provide professional transportation solutions designed to meet the diverse needs of corporate organisations, businesses, educational institutions, families, and individual travellers.</p>
+    <p>From daily employee transportation to intercity journeys and personalised travel arrangements, our focus is on making every journey comfortable, convenient, and dependable.</p>
+    <div class="ab-motto">Your Safety, Service and Satisfaction Is Our Motto.</div>
+  </div>
+</section>
+
+<section class="ab-sec light" id="who-we-are">
+  <div class="wrap ab-split">
+    <div class="reveal">
+      <span class="eyebrow">Who We Are</span>
+      <h2>Dependable mobility for <em>organisations and individuals.</em></h2>
+      <p>REVA Travels is a travel and transportation service provider committed to delivering dependable mobility solutions for organisations and individuals. We bring together professional service, thoughtful coordination, and a customer-focused approach to meet a wide range of transportation requirements.</p>
+      <p>We understand that transportation is more than simply getting from one place to another. For businesses, it supports daily operations and employee mobility. For families and individual travellers, it creates the freedom to explore new destinations with greater convenience.</p>
+      <p>Our approach is built around understanding each customer's requirements and providing suitable transportation solutions with attention to safety, comfort, punctuality, and service quality.</p>
+      <p><strong>At REVA Travels, every journey is an opportunity to build trust and create a positive travel experience.</strong></p>
+    </div>
+    <div class="reveal"><div class="ab-media " data-label="REVA vehicle &amp; chauffeur at a corporate pickup"><img src="assets/images/pickup.jpg" alt="A suited chauffeur walks beside a white SUV while another man waits near a gray sedan and a REVA Travels coach outside a glass-fronted corporate building. The coach displays REVA Travels, creating a polished business-travel scene in daylight." loading="lazy" onerror="this.remove()"></div></div>
+  </div>
+</section>
+
+<section class="ab-sec" id="what-we-do">
+  <div class="wrap">
+    <div class="ab-center reveal">
+      <span class="eyebrow">What We Do</span>
+      <h2>Transportation Solutions <em>for Every Journey</em></h2>
+      <p>We offer a range of transportation services designed to support business operations, institutional requirements, and personal travel needs.</p>
+    </div>
+    <div class="ab-grid3"><article class="svc-card reveal"><div class="ab-media " data-label="Corporate & Employee Transportation"><img src="assets/images/about/pickup.jpg" alt="Corporate &amp; Employee Transportation" loading="lazy" onerror="this.remove()"></div><div class="svc-body"><h3>Corporate &amp; Employee Transportation</h3><p>Organised employee pickup and drop-off services designed to support daily commuting requirements and workplace transportation.</p></div></article><article class="svc-card reveal"><div class="ab-media " data-label="Outstation & Business Travel"><img src="assets/images/about/outstation.jpg" alt="Outstation &amp; Business Travel" loading="lazy" onerror="this.remove()"></div><div class="svc-body"><h3>Outstation &amp; Business Travel</h3><p>Comfortable intercity transportation for corporate visits, business meetings, family holidays, and journeys to destinations beyond the city.</p></div></article><article class="svc-card reveal"><div class="ab-media " data-label="Long-Term Fleet & Contract Services"><img src="assets/images/about/fleet-contract.jpg" alt="Long-Term Fleet &amp; Contract Services" loading="lazy" onerror="this.remove()"></div><div class="svc-body"><h3>Long-Term Fleet &amp; Contract Services</h3><p>Dedicated vehicle arrangements and transportation support tailored to the ongoing requirements of organisations and businesses.</p></div></article><article class="svc-card reveal"><div class="ab-media " data-label="School & Institutional Transportation"><img src="assets/images/about/school.jpg" alt="School &amp; Institutional Transportation" loading="lazy" onerror="this.remove()"></div><div class="svc-body"><h3>School &amp; Institutional Transportation</h3><p>Transportation solutions for educational institutions, students, faculty members, and other institutional travel requirements.</p></div></article><article class="svc-card reveal"><div class="ab-media " data-label="Airport Transfers"><img src="assets/images/about/airport.jpg" alt="Airport Transfers" loading="lazy" onerror="this.remove()"></div><div class="svc-body"><h3>Airport Transfers</h3><p>Convenient airport pickup and drop-off arrangements designed to support smooth connections between airports, homes, hotels, and workplaces.</p></div></article><article class="svc-card reveal"><div class="ab-media " data-label="Customised Travel Solutions"><img src="assets/images/about/custom.jpg" alt="Customised Travel Solutions" loading="lazy" onerror="this.remove()"></div><div class="svc-body"><h3>Customised Travel Solutions</h3><p>Flexible transportation arrangements planned around individual schedules, organisational requirements, and specific travel needs.</p></div></article></div>
+  </div>
+</section>
+
+<section class="ab-sec light" id="mission-vision" style="padding-top:90px;padding-bottom:90px">
+  <div class="wrap">
+    <div class="mv-grid">
+      <div class="mv reveal">
+        <div class="ab-media " data-label="Chauffeur beside a REVA vehicle"><img src="assets/images/mission.jpg" alt="Professional chauffeur beside a clean REVA Travels vehicle" loading="lazy" onerror="this.remove()"></div>
+        <span class="eyebrow">Our Mission</span>
+        <h2>Our <em>Mission</em></h2>
+        <p>To deliver dependable, customer-focused transportation solutions that prioritise safety, comfort, punctuality, and service excellence. We aim to simplify travel for businesses, institutions, families, and individuals through thoughtful planning, professional coordination, and a commitment to customer satisfaction.</p>
+      </div>
+      <div class="mv reveal">
+        <div class="ab-media " data-label="Premium vehicle on a highway at sunrise"><img src="assets/images/vision.jpg" alt="Premium vehicle travelling along a scenic highway at sunrise" loading="lazy" onerror="this.remove()"></div>
+        <span class="eyebrow">Our Vision</span>
+        <h2>Our <em>Vision</em></h2>
+        <p>To become a trusted name in professional travel and transportation by building lasting customer relationships, delivering consistent service quality, and continually improving the way people and organisations travel.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="ab-sec alt" id="values">
+  <div class="wrap">
+    <div class="ab-center reveal">
+      <span class="eyebrow">Our Core Values</span>
+      <h2>The <em>REVA</em> Difference</h2>
+    </div>
+    <div class="val-grid"><div class="val reveal"><svg viewBox="0 0 24 24"><path d="M12 3l8 3v6c0 4.5-3.2 8.3-8 9-4.8-.7-8-4.5-8-9V6l8-3z"/><path d="M9 12l2 2 4-4"/></svg><h3>Safety First</h3><p>We place safety at the centre of our transportation philosophy and recognise the importance of responsible travel.</p></div><div class="val reveal"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg><h3>Dependable Service</h3><p>We value proper coordination, reliable arrangements, and attention to agreed schedules.</p></div><div class="val reveal"><svg viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c.6-3.6 3-5.5 6.5-5.5s5.9 1.9 6.5 5.5"/><path d="M16 4.8a3.5 3.5 0 0 1 0 6.4M18 14.8c2 .6 3.1 2.3 3.5 5.2"/></svg><h3>Customer-Focused Approach</h3><p>We listen to individual and organisational requirements to provide transportation solutions suited to each journey.</p></div><div class="val reveal"><svg viewBox="0 0 24 24"><path d="M6 3c1.5 0 2 1 2 2l1 8h6c1.5 0 2.5 1 2.5 2.5V19M8 13l-2.5 1M10 19h9"/></svg><h3>Comfort &amp; Convenience</h3><p>We aim to make travel smoother and more comfortable through suitable vehicles and thoughtful arrangements.</p></div><div class="val reveal"><svg viewBox="0 0 24 24"><path d="M3 11l4-4 4 2 4-2 6 5-4 5-3 1-3-2-3 1-5-3z"/><path d="M3 11v5M21 12v4"/></svg><h3>Long-Term Partnerships</h3><p>We believe strong business relationships are built through communication, accountability, and consistent attention to service quality.</p></div></div>
+  </div>
+</section>
+
+<section class="ab-sec light" id="who-we-serve">
+  <div class="wrap ab-split flip">
+    <div class="reveal">
+      <span class="eyebrow">Who We Serve</span>
+      <h2>One Transportation Partner. <em>Multiple Travel Needs.</em></h2>
+      <p>Every customer has different transportation requirements. A business may need regular employee commuting services, an institution may require coordinated transportation, and a family may be planning a comfortable outstation journey.</p>
+      <p>REVA Travels aims to bring these needs together through flexible transportation solutions tailored to different schedules, group sizes, and travel purposes.</p>
+      <p style="margin-top:22px"><strong>We serve a broad range of transportation needs, including:</strong></p>
+      <ul class="serve-list"><li>Corporate organisations and businesses</li><li>Manufacturing and industrial facilities</li><li>Government and educational institutions</li><li>School and college transportation requirements</li><li>Airport transfers and business travel</li><li>Families, groups, and individual travellers</li></ul>
+      <p>Our objective is to make transportation coordination simpler while maintaining a consistent focus on dependable service.</p>
+    </div>
+    <div class="reveal"><div class="ab-media " data-label="Cars, Tempo Travellers &amp; buses at a corporate campus"><img src="assets/images/serve.jpg" alt="Fleet of cars, Tempo Travellers and buses parked in front of a corporate campus" loading="lazy" onerror="this.remove()"></div></div>
+  </div>
+</section>
+
+<section class="ab-commit" id="commitment">
+  <img class="ab-commit-img" src="assets/images/about/scenic.jpg" alt="Premium REVA Travels vehicle on a scenic road" onerror="this.remove()">
+  <div class="wrap reveal">
+    <span class="eyebrow">Our Commitment</span>
+    <h2 style="font-size:clamp(28px,4.4vw,48px);margin:12px 0 22px">More Than Transportation. <em style="color:var(--gold)">A Commitment You Can Trust.</em></h2>
+    <p style="color:var(--sand);font-size:17px">We understand that every journey carries a purpose. It may be an employee travelling to work, a professional attending an important meeting, a student travelling to an institution, or a family setting out to discover a new destination.</p>
+    <p style="color:var(--sand-dim)">That is why we approach every transportation requirement with care, attention, and a commitment to service.</p>
+    <p style="color:var(--sand-dim)">At REVA Travels, we strive to make every journey a positive experience through dependable arrangements, customer-focused service, and attention to the details that matter.</p>
+    <p class="closing">Wherever your journey takes you, let us help you travel with confidence.</p>
+  </div>
+</section>
+
+<section class="ab-cta" id="plan">
+  <div class="wrap reveal">
+    <span class="eyebrow">Contact REVA Travels</span>
+    <h2>Let's Plan Your Next Journey</h2>
+    <p>Whether you require corporate employee transportation, long-term fleet services, airport transfers, or comfortable outstation travel, REVA Travels is ready to understand your requirements.</p>
+    <p>Tell us where you need to go, what kind of transportation you require, and how we can help.</p>
+    <div class="tag">Your Journey. Our Commitment.</div>
+    <div class="row">
+      <a href="index.html#contact" class="btn btn-solid">Get in Touch →</a>
+      <a href="index.html#services" class="btn btn-ghost">Explore Our Services</a>
+    </div>
+  </div>
+</section>
+</main>
+
+<footer>
+  <div class="footer-grid">
+    <div>
+      <div class="logo" style="margin-bottom:14px;">
+        <img src="assets/images/Horse logo.jpg" alt="REVA Travels logo" class="logo-img">
+        <span><span class="brand-initial">R</span>eva T<span class="brand-script">ravels</span><small>Your Safety,Service and Satisfaction is Our Motto</small></span>
+      </div>
+      <p style="color:var(--sand-dim); font-size:14px; max-width:280px;">"Every journey is delivered with excellence, and every customer remains at the heart of everything we do."</p>
+    </div>
+    <div>
+      <h4>Explore</h4>
+      <ul><li><a href="index.html">Home</a></li><li><a href="index.html#services">Services</a></li><li><a href="index.html#experiences">Experiences</a></li><li><a href="index.html#contact">Contact</a></li></ul>
+    </div>
+    <div>
+      <h4>Company</h4>
+      <ul><li><a href="about.html" aria-current="page">About Us</a></li><li><a href="careers.html">Careers</a></li><li><a href="#">Press</a></li></ul>
+    </div>
+    <div>
+      <h4>Follow</h4>
+      <!-- SOCIAL LINKS: replace each href="#" with your real profile URL.
+           Delete any <a> line you don't need. -->
+      <div class="social-icons">
+        <a href="#" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn" title="LinkedIn">
+          <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="4.5"/><path d="M8 10.5V16M8 7.8v.1M11.5 16v-5.5M11.5 13c0-1.6 1-2.5 2.3-2.5s2.2.9 2.2 2.5V16"/></svg>
+        </a>
+        <a href="#" target="_blank" rel="noopener noreferrer" aria-label="Instagram" title="Instagram">
+          <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.2" cy="6.8" r=".6"/></svg>
+        </a>
+        <a href="#" target="_blank" rel="noopener noreferrer" aria-label="Facebook" title="Facebook">
+          <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="4.5"/><path d="M15.5 21v-7h2.3l.4-2.7h-2.7V9.6c0-.8.3-1.3 1.4-1.3h1.4V5.9c-.3 0-1.1-.1-2.1-.1-2.1 0-3.4 1.2-3.4 3.4v2.1H10.5V14h2.3v7"/></svg>
+        </a>
+        <a href="#" target="_blank" rel="noopener noreferrer" aria-label="Google Business" title="Google Business">
+          <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="4.5"/><path d="M16.5 10.2A5 5 0 1 0 17 12.5h-4.5"/></svg>
+        </a>
+      </div>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2026 REVA Travels. All rights reserved.</span>
+    <span>Designed for wanderers, not tourists.</span>
+  </div>
+</footer>
+
+
+<div class="floating-contacts">
+  <a class="fab fab-whatsapp" href="https://wa.me/919845293266" target="_blank" rel="noopener" aria-label="Chat on WhatsApp">
+    <span class="fab-label">Chat on WhatsApp</span>
+    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38c1.45.79 3.08 1.21 4.74 1.21 5.46 0 9.91-4.45 9.91-9.91C21.95 6.45 17.5 2 12.04 2zm5.8 14.02c-.24.68-1.4 1.3-1.93 1.38-.5.08-1.12.11-1.8-.11-.42-.13-.96-.31-1.65-.6-2.9-1.25-4.79-4.17-4.94-4.36-.14-.2-1.18-1.57-1.18-3 0-1.42.75-2.12 1.02-2.41.26-.29.57-.36.76-.36.19 0 .38 0 .55.01.18.01.41-.07.64.49.24.57.81 1.98.88 2.13.07.14.12.31.02.5-.1.19-.15.31-.29.48-.14.17-.3.37-.43.5-.14.14-.29.29-.13.57.17.29.75 1.24 1.61 2.01 1.11 1 2.04 1.31 2.33 1.46.29.14.46.12.63-.07.17-.19.72-.84.92-1.13.19-.28.38-.24.64-.14.26.1 1.66.79 1.94.93.29.14.48.21.55.33.07.12.07.68-.17 1.36z"/></svg>
+  </a>
+
+  <a class="fab fab-email" href="mailto:revatravels01@gmail.com" aria-label="Email us">
+    <span class="fab-label">revatravels01@gmail.com</span>
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 8l9 6 9-6"/><rect x="3" y="5" width="18" height="14" rx="2"/></svg>
+  </a>
+
+  <a class="fab fab-call" href="tel:+919845293266" aria-label="Call us">
+    <span class="fab-label">+91 98452 93266</span>
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.3 1.8.6 2.7a2 2 0 0 1-.5 2.1L8 9.9a16 16 0 0 0 6 6l1.4-1.2a2 2 0 0 1 2.1-.5c.9.3 1.8.5 2.7.6a2 2 0 0 1 1.8 2.1Z"/></svg>
+  </a>
+</div>
+
+<script>
+(function(){
+
+  var siteNav=document.getElementById('siteNav'), navToggle=document.getElementById('navToggle'), navLinks=document.getElementById('navLinks');
+  navToggle.addEventListener('click',function(){ navLinks.classList.toggle('open'); });
+  navLinks.querySelectorAll('a').forEach(function(a){ a.addEventListener('click',function(){ navLinks.classList.remove('open'); }); });
+
+  var drawer=document.getElementById('servicesDrawer');
+  if(drawer){
+    var btn=drawer.querySelector('.drawer-btn');
+    var setOpen=function(o){ drawer.classList.toggle('open',o); btn.setAttribute('aria-expanded',String(o)); };
+    btn.addEventListener('click',function(e){ e.stopPropagation(); setOpen(!drawer.classList.contains('open')); });
+    drawer.querySelectorAll('a').forEach(function(a){ a.addEventListener('click',function(){ setOpen(false); }); });
+    document.addEventListener('click',function(e){ if(!drawer.contains(e.target)) setOpen(false); });
+    document.addEventListener('keydown',function(e){ if(e.key==='Escape') setOpen(false); });
+  }
+  var onScroll=function(){ siteNav.classList.toggle('scrolled',window.scrollY>40); };
+  window.addEventListener('scroll',onScroll,{passive:true}); onScroll();
+
+  var els=document.querySelectorAll('.reveal');
+  if(!('IntersectionObserver' in window)){ els.forEach(function(e){ e.classList.add('in-view'); }); return; }
+  var io=new IntersectionObserver(function(es){ es.forEach(function(en){ if(en.isIntersecting){ en.target.classList.add('in-view'); io.unobserve(en.target); } }); },{threshold:.12});
+  els.forEach(function(e){ io.observe(e); });
+})();
+</script>
+</body>
+</html>
