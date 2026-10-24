@@ -1,4 +1,3 @@
-```javascript
 /**
  * REVA Travels — Contact Form Backend
  * Express server for contact form submissions and email enquiries.
