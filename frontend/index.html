@@ -1858,6 +1858,42 @@ updateActiveNav();
   });
 })();
 </script>
+   <script>
+  const contactForm = document.getElementById('contactForm');
+  const formStatus = document.getElementById('formStatus');
+
+  contactForm.addEventListener('submit', async (event) => {
+    event.preventDefault();
+
+    const submitButton = contactForm.querySelector('[type="submit"]');
+    submitButton.disabled = true;
+    formStatus.textContent = 'Sending…';
+
+    const formData = Object.fromEntries(new FormData(contactForm).entries());
+
+    try {
+      const response = await fetch('https://revatravels.onrender.com/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData),
+      });
+
+      const result = await response.json();
+
+      if (!response.ok || !result.success) {
+        throw new Error(result.message || 'Unable to send your enquiry. Please try again.');
+      }
+
+      formStatus.textContent = 'Thank you! Your enquiry has been sent.';
+      contactForm.reset();
+    } catch (error) {
+      formStatus.textContent =
+        error.message || 'Could not connect. Please try again or contact us by phone.';
+    } finally {
+      submitButton.disabled = false;
+    }
+  });
+</script>
 
 </body>
 </html>
