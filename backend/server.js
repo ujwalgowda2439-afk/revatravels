@@ -279,4 +279,3 @@ app.listen(PORT, '0.0.0.0', () => {
     'REVA Travels backend listening on port ' + PORT
   );
 });
-```
