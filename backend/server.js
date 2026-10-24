@@ -130,7 +130,6 @@ const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 // --------------------------------------------------
 // CONTACT FORM API
 // --------------------------------------------------
-
 app.post('/api/contact', contactLimiter, async (req, res) => {
   const {
     first_name = '',
@@ -141,7 +140,7 @@ app.post('/api/contact', contactLimiter, async (req, res) => {
     botcheck = '',
   } = req.body || {};
 
-  // Silently accept submissions that trigger the honeypot.
+  // Silently accept bot submissions caught by the honeypot.
   if (botcheck) {
     return res.status(200).json({ success: true });
   }
@@ -173,25 +172,15 @@ app.post('/api/contact', contactLimiter, async (req, res) => {
     });
   }
 
-  const destinationSafe =
-    String(destination).trim() || 'Not specified';
-
-  const messageSafe =
-    String(message).trim() || '(no message provided)';
+  const destinationSafe = String(destination).trim() || 'Not specified';
+  const messageSafe = String(message).trim() || '(no message provided)';
 
   try {
     await transporter.sendMail({
-      from:
-        '"REVA Travels Website" <' +
-        process.env.SMTP_USER +
-        '>',
-
+      from: '"REVA Travels Website" <' + process.env.SMTP_USER + '>',
       to: process.env.CONTACT_TO || process.env.SMTP_USER,
       replyTo: emailAddr,
-
-      subject:
-        'New enquiry from ' + firstName + ' ' + lastName,
-
+      subject: 'New enquiry from ' + firstName + ' ' + lastName,
       text: [
         'Name: ' + firstName + ' ' + lastName,
         'Email: ' + emailAddr,
@@ -200,7 +189,6 @@ app.post('/api/contact', contactLimiter, async (req, res) => {
         'Message:',
         messageSafe,
       ].join('\n'),
-
       html:
         '<h2>New enquiry from the REVA Travels website</h2>' +
         '<p><strong>Name:</strong> ' +
