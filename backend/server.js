@@ -127,6 +127,15 @@ function escapeHtml(value) {
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
+app.get('/api/contact', (req, res) => {
+  res.set('Allow', 'POST');
+  return res.status(405).json({
+    success: false,
+    message: 'This endpoint accepts POST requests from the contact form.',
+  });
+});
+
+
 // --------------------------------------------------
 // CONTACT FORM API
 // --------------------------------------------------
