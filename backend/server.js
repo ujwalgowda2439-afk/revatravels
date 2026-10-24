@@ -1,17 +1,15 @@
 ```javascript
 /**
  * REVA Travels — Contact Form Backend
- * ------------------------------------
- * Express backend for the REVA Travels website.
- * Receives contact form submissions and emails enquiries.
+ * Express server for contact form submissions and email enquiries.
  *
- * Local:
+ * Run locally:
  *   npm install
  *   npm start
  *
  * Render:
- *   Set the Start Command to: npm start
- *   Configure environment variables in the Render dashboard.
+ *   Build command: npm install
+ *   Start command: npm start
  */
 
 require('dotenv').config({
@@ -41,8 +39,11 @@ const allowedOrigins = process.env.ALLOWED_ORIGIN
 app.use(
   cors({
     origin(origin, callback) {
-      // Permit requests without an Origin header, such as health checks.
-      if (!origin || allowedOrigins.includes('*') || allowedOrigins.includes(origin)) {
+      if (
+        !origin ||
+        allowedOrigins.includes('*') ||
+        allowedOrigins.includes(origin)
+      ) {
         return callback(null, true);
       }
 
@@ -112,7 +113,10 @@ const transporter = nodemailer.createTransport({
   },
 });
 
-// Escape user input before including it in HTML emails.
+// --------------------------------------------------
+// INPUT HELPERS
+// --------------------------------------------------
+
 function escapeHtml(value) {
   return String(value)
     .replace(/&/g, '&amp;')
@@ -138,7 +142,7 @@ app.post('/api/contact', contactLimiter, async (req, res) => {
     botcheck = '',
   } = req.body || {};
 
-  // Honeypot field for basic bot protection.
+  // Silently accept submissions that trigger the honeypot.
   if (botcheck) {
     return res.status(200).json({ success: true });
   }
@@ -163,6 +167,7 @@ app.post('/api/contact', contactLimiter, async (req, res) => {
 
   if (!process.env.SMTP_USER || !process.env.SMTP_PASS) {
     console.error('Email configuration is missing.');
+
     return res.status(500).json({
       success: false,
       message: 'The email service is not configured. Please try again later.',
@@ -176,42 +181,60 @@ app.post('/api/contact', contactLimiter, async (req, res) => {
     String(message).trim() || '(no message provided)';
 
   try {
-  await transporter.sendMail({
-    from: '"REVA Travels Website" <' + process.env.SMTP_USER + '>',
-    to: process.env.CONTACT_TO || process.env.SMTP_USER,
-    replyTo: emailAddr,
-    subject: 'New enquiry from ' + firstName + ' ' + lastName,
+    await transporter.sendMail({
+      from:
+        '"REVA Travels Website" <' +
+        process.env.SMTP_USER +
+        '>',
 
-    text: [
-      'Name: ' + firstName + ' ' + lastName,
-      'Email: ' + emailAddr,
-      'Destination interest: ' + destinationSafe,
-      '',
-      'Message:',
-      messageSafe,
-    ].join('\n'),
+      to: process.env.CONTACT_TO || process.env.SMTP_USER,
+      replyTo: emailAddr,
 
-    html:
-      '<h2>New enquiry from the REVA Travels website</h2>' +
-      '<p><strong>Name:</strong> ' + escapeHtml(firstName) + ' ' + escapeHtml(lastName) + '</p>' +
-      '<p><strong>Email:</strong> ' + escapeHtml(emailAddr) + '</p>' +
-      '<p><strong>Destination interest:</strong> ' + escapeHtml(destinationSafe) + '</p>' +
-      '<p><strong>Message:</strong></p>' +
-      '<p>' + escapeHtml(messageSafe).replace(/\n/g, '<br>') + '</p>',
-  });
+      subject:
+        'New enquiry from ' + firstName + ' ' + lastName,
 
-  return res.status(200).json({
-    success: true,
-    message: 'Your enquiry has been sent successfully.',
-  });
-} catch (err) {
-  console.error('Failed to send contact email:', err);
+      text: [
+        'Name: ' + firstName + ' ' + lastName,
+        'Email: ' + emailAddr,
+        'Destination interest: ' + destinationSafe,
+        '',
+        'Message:',
+        messageSafe,
+      ].join('\n'),
 
-  return res.status(500).json({
-    success: false,
-    message: 'Could not send your enquiry. Please try again shortly.',
-  });
-}
+      html:
+        '<h2>New enquiry from the REVA Travels website</h2>' +
+        '<p><strong>Name:</strong> ' +
+        escapeHtml(firstName) +
+        ' ' +
+        escapeHtml(lastName) +
+        '</p>' +
+        '<p><strong>Email:</strong> ' +
+        escapeHtml(emailAddr) +
+        '</p>' +
+        '<p><strong>Destination interest:</strong> ' +
+        escapeHtml(destinationSafe) +
+        '</p>' +
+        '<p><strong>Message:</strong></p>' +
+        '<p>' +
+        escapeHtml(messageSafe).replace(/\n/g, '<br>') +
+        '</p>',
+    });
+
+    return res.status(200).json({
+      success: true,
+      message: 'Your enquiry has been sent successfully.',
+    });
+  } catch (err) {
+    console.error('Failed to send contact email:', err);
+
+    return res.status(500).json({
+      success: false,
+      message: 'Could not send your enquiry. Please try again shortly.',
+    });
+  }
+});
+
 // --------------------------------------------------
 // UNKNOWN ROUTES
 // --------------------------------------------------
@@ -253,6 +276,8 @@ app.use((err, req, res, next) => {
 // --------------------------------------------------
 
 app.listen(PORT, '0.0.0.0', () => {
-  console.log(`REVA Travels backend listening on port ${PORT}`);
+  console.log(
+    'REVA Travels backend listening on port ' + PORT
+  );
 });
 ```
